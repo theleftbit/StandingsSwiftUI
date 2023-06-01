@@ -19,7 +19,7 @@ struct ContentView: View {
             divisionHeader(division)
             ForEach(division.teams, id: \.name) { team in
               HStack {
-                Text(team.name)
+                TeamNameView(team: team)
                   .pinToTheLeadingEdge()
                 statsView(team)
               }
@@ -46,14 +46,13 @@ struct ContentView: View {
     HStack {
       Spacer()
         .frame(width: 8)
-      Text(division.name)
-        .font(.title)
+      DivisionNameView(division: division)
         .pinToTheLeadingEdge()
 
       SyncableScrollView($statsOffset) {
         HStack {
           ForEach(model.hydratedStats, id: \.rawValue) { stat in
-            Text(stat.title)
+            DivisionStatView(stat: stat)
               .setDefaultFrameForStat()
           }
         }
@@ -68,16 +67,52 @@ struct ContentView: View {
       HStack {
         ForEach(model.hydratedStats, id: \.rawValue) { stat in
           if let value = team.stats[stat] {
-            ZStack {
-              Rectangle()
-                .fill(Color.red.gradient)
-                .cornerRadius(2)
-              Text(value)
-            }
-            .setDefaultFrameForStat()
+            StatValueView(value: value)
+              .setDefaultFrameForStat()
           }
         }
       }
+    }
+  }
+
+  struct TeamNameView: View {
+    
+    let team: ViewModel.Division.Team
+    
+    var body: some View {
+      Text(team.name)
+    }
+  }
+  
+  struct DivisionNameView: View {
+
+    let division: ViewModel.Division
+
+    var body: some View {
+      Text(division.name)
+        .font(.title)
+    }
+  }
+  
+  struct DivisionStatView: View {
+    let stat: ViewModel.Stat.Kind
+    var body: some View {
+      Text(stat.title)
+    }
+  }
+  
+  struct StatValueView: View {
+    
+    let value: ViewModel.Stat.Value
+    
+    var body: some View {
+      ZStack {
+        Rectangle()
+          .fill(Color.red.gradient)
+          .cornerRadius(2)
+        Text(value)
+      }
+      .setDefaultFrameForStat()
     }
   }
 }
