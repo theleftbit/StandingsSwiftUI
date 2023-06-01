@@ -90,31 +90,6 @@ struct ViewModel: Equatable {
           return "NEXT GAME"
         }
       }
-      
-      enum ColumnWidth: CGFloat {
-        case small = 40
-        case medium = 50
-        case large = 90
-      }
-      
-      var columnWidth: ColumnWidth {
-        switch self {
-        case .wins,
-            .losses,
-            .streak,
-            .gamesBehind,
-            .runDifferential,
-            .eliminationNumber:
-          return .small
-        case .winningPercent,
-            .lastTen,
-            .homeRecord,
-            .awayRecord:
-          return .medium
-        case .previousGame, .nextGame:
-          return .large
-        }
-      }
     }
   }
 }
