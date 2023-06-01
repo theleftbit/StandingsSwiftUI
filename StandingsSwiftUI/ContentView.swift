@@ -21,7 +21,7 @@ struct ContentView: View {
               HStack {
                 TeamNameView(team: team)
                   .pinToTheLeadingEdge()
-                statsView(team)
+                teamStatsView(team)
               }
               .padding(8)
               Divider()
@@ -62,7 +62,7 @@ struct ContentView: View {
     .sticky()
   }
   
-  private func statsView(_ team: ViewModel.Division.Team) -> some View {
+  private func teamStatsView(_ team: ViewModel.Division.Team) -> some View {
     SyncableScrollView($statsOffset) {
       HStack {
         ForEach(model.hydratedStats, id: \.rawValue) { stat in
