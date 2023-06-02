@@ -11,7 +11,9 @@ import SwiftUI
 struct StandingsSwiftUIApp: App {
   var body: some Scene {
     WindowGroup {
-      ContentView(model: .mock())
+      NavigationStack {
+        ContentView(model: .mock())
+      }
     }
   }
 }

@@ -17,23 +17,23 @@ struct SyncableScrollView<Content: View>: UIViewRepresentable {
     let scrollView = UIScrollView()
     scrollView.backgroundColor = .clear
     scrollView.showsHorizontalScrollIndicator = false
-    let hosting = UIHostingController(rootView: content)
-    hosting.view.backgroundColor = .clear
-    hosting.view.translatesAutoresizingMaskIntoConstraints = false
-    scrollView.addSubview(hosting.view)
+      let hostingConfig = UIHostingConfiguration(content: { content }).margins(.all, 0)
+    let hostingView = hostingConfig.makeContentView()
+    hostingView.translatesAutoresizingMaskIntoConstraints = false
+    scrollView.addSubview(hostingView)
     var constraints: [NSLayoutConstraint] = [
-      hosting.view.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-      hosting.view.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-      hosting.view.topAnchor.constraint(equalTo: scrollView.topAnchor),
-      hosting.view.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
+      hostingView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+      hostingView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+      hostingView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+      hostingView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
     ]
     switch axis {
     case .horizontal:
-      constraints.append(hosting.view.heightAnchor.constraint(equalTo: scrollView.heightAnchor))
+      constraints.append(hostingView.heightAnchor.constraint(equalTo: scrollView.heightAnchor))
       scrollView.alwaysBounceHorizontal = true
       scrollView.showsHorizontalScrollIndicator = showsScrollIndicator
     case .vertical:
-      constraints.append(hosting.view.widthAnchor.constraint(equalTo: scrollView.widthAnchor))
+      constraints.append(hostingView.widthAnchor.constraint(equalTo: scrollView.widthAnchor))
       scrollView.alwaysBounceVertical = true
       scrollView.showsVerticalScrollIndicator = showsScrollIndicator
     default:
