@@ -12,7 +12,7 @@ struct StandingsSwiftUIApp: App {
   var body: some Scene {
     WindowGroup {
       NavigationStack {
-        ContentView(model: .mock())
+        StandingsView(model: .mock())
       }
     }
   }

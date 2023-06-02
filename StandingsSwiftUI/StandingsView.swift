@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ContentView: View {
+struct StandingsView: View {
   
   init(model: ViewModel) {
     self.model = model
@@ -9,13 +9,13 @@ struct ContentView: View {
   let model: ViewModel
   
   /// Tracks the width of each stats column and makes sure they match across the layout
-  @StateObject var layoutManager = LayoutManager()
+  @StateObject private var layoutManager = LayoutManager()
   
   /// Tracks the offset of the stats scrollView
   @State private var statsOffset: CGPoint = .zero
   
   @Environment(\.sizeCategory) private var sizeCategory
-
+  
   var body: some View {
     StickyScrollView {
       VStack(spacing: 0) {
@@ -42,8 +42,19 @@ struct ContentView: View {
     .navigationTitle("Standings")
     .navigationBarTitleDisplayMode(.inline)
   }
+}
+
+struct StandingsView_Previews: PreviewProvider {
+  static var previews: some View {
+    NavigationStack {
+      StandingsView(model: .mock())
+    }
+  }
+}
+
+private extension StandingsView {
   
-  private func leagueHeader(_ league: ViewModel.League) -> some View {
+  func leagueHeader(_ league: ViewModel.League) -> some View {
     Text(league.kind.title)
       .frame(maxWidth: .infinity)
       .background(.thinMaterial)
@@ -52,10 +63,12 @@ struct ContentView: View {
       .sticky()
   }
   
-  private func divisionHeader(_ division: ViewModel.Division) -> some View {
+  func divisionHeader(_ division: ViewModel.Division) -> some View {
     HStack(spacing: 0) {
+      
       Spacer()
         .frame(width: 8)
+      
       DivisionNameView(division: division)
         .pinToTheLeadingEdge()
 
@@ -74,7 +87,7 @@ struct ContentView: View {
     .sticky()
   }
   
-  private func teamStatsView(_ team: ViewModel.Division.Team) -> some View {
+  func teamStatsView(_ team: ViewModel.Division.Team) -> some View {
     SyncableScrollView($statsOffset) {
       HStack(spacing: 0) {
         ForEach(model.hydratedStats, id: \.rawValue) { stat in
@@ -137,7 +150,7 @@ struct ContentView: View {
     }
   }
   
-  private func bindingForStat(_ stat: ViewModel.Stat.Kind) -> Binding<CGFloat> {
+  func bindingForStat(_ stat: ViewModel.Stat.Kind) -> Binding<CGFloat> {
     switch stat {
     case .wins:
       return $layoutManager.widthForWins
@@ -217,7 +230,7 @@ private extension View {
   }
 }
 
-class LayoutManager: ObservableObject {
+private class LayoutManager: ObservableObject {
   
   @Published var widthForWins: CGFloat = 0
   @Published var widthForLosses: CGFloat = 0
@@ -252,14 +265,5 @@ class LayoutManager: ObservableObject {
   /// be re-created when the ID changes, which seems to workaround for now.
   var someSortOfID: String {
     "widthForWins:\(widthForWins)_widthForLosses:\(widthForLosses)_widthForWinningPercent:\(widthForWinningPercent) _widthForGamesBehind:\(widthForGamesBehind)_widthForLastTen:\(widthForLastTen)_widthForStreak:\(widthForStreak)_widthForRunDifferential:\(widthForRunDifferential)_widthForHomeRecord:\(widthForHomeRecord)_widthForAwayRecord:\(widthForAwayRecord)_widthForPreviousGame:\(widthForPreviousGame)_widthFoNextGame:\(widthForNextGame)_ widthFoEliminationNumber:\(widthForEliminationNumber)"
-  }
-}
-  
-
-struct ContentView_Previews: PreviewProvider {
-  static var previews: some View {
-    NavigationStack {
-      ContentView(model: .mock())
-    }
   }
 }
