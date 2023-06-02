@@ -7,9 +7,15 @@ struct ContentView: View {
   }
   
   let model: ViewModel
+  
+  /// Tracks the width of each stats column and makes sure they match across the layout
   @StateObject var layoutManager = LayoutManager()
+  
+  /// Tracks the offset of the stats scrollView
   @State private var statsOffset: CGPoint = .zero
-    
+  
+  @Environment(\.sizeCategory) private var sizeCategory
+
   var body: some View {
     StickyScrollView {
       VStack(spacing: 0) {
@@ -29,6 +35,9 @@ struct ContentView: View {
           }
         }
       }
+    }
+    .onChange(of: sizeCategory) { _ in
+      layoutManager.reset()
     }
     .navigationTitle("Standings")
     .navigationBarTitleDisplayMode(.inline)
@@ -54,7 +63,7 @@ struct ContentView: View {
         HStack(spacing: 0) {
           ForEach(model.hydratedStats, id: \.rawValue) { stat in
             DivisionStatView(stat: stat)
-              .applyStatConstraint(stat, layoutManager: layoutManager)
+              .applyWidthConstraint(bindingForStat(stat))
               .border(Color.yellow)
           }
         }
@@ -71,7 +80,7 @@ struct ContentView: View {
         ForEach(model.hydratedStats, id: \.rawValue) { stat in
           if let value = team.stats[stat] {
             StatValueView(value: value)
-              .applyStatConstraint(stat, layoutManager: layoutManager)
+              .applyWidthConstraint(bindingForStat(stat))
               .border(Color.yellow)
           }
         }
@@ -127,6 +136,35 @@ struct ContentView: View {
         }
     }
   }
+  
+  private func bindingForStat(_ stat: ViewModel.Stat.Kind) -> Binding<CGFloat> {
+    switch stat {
+    case .wins:
+      return $layoutManager.widthForWins
+    case .losses:
+      return $layoutManager.widthForLosses
+    case .winningPercent:
+      return $layoutManager.widthForWinningPercent
+    case .gamesBehind:
+      return $layoutManager.widthForGamesBehind
+    case .eliminationNumber:
+      return $layoutManager.widthForEliminationNumber
+    case .lastTen:
+      return $layoutManager.widthForLastTen
+    case .streak:
+      return $layoutManager.widthForStreak
+    case .runDifferential:
+      return $layoutManager.widthForRunDifferential
+    case .homeRecord:
+      return $layoutManager.widthForHomeRecord
+    case .awayRecord:
+      return $layoutManager.widthForAwayRecord
+    case .previousGame:
+      return $layoutManager.widthForPreviousGame
+    case .nextGame:
+      return $layoutManager.widthForNextGame
+    }
+  }
 }
 
 private struct PinToLeadingEdgeModifier: ViewModifier {
@@ -142,37 +180,6 @@ private extension View {
   
   func pinToTheLeadingEdge() -> some View {
     modifier(PinToLeadingEdgeModifier())
-  }
-  
-  func applyStatConstraint(_ stat: ViewModel.Stat.Kind, layoutManager: LayoutManager) -> some View {
-    unowned let _manager = layoutManager
-    /// TODO: See if this can be improved
-    switch stat {
-    case .wins:
-      return self.getBiggerWidth(.init(get: { _manager.widthForWins }, set: { _manager.widthForWins = $0}))
-    case .losses:
-      return self.getBiggerWidth(.init(get: { _manager.widthForLosses }, set: { _manager.widthForLosses = $0}))
-    case .winningPercent:
-      return self.getBiggerWidth(.init(get: { _manager.widthForWinningPercent }, set: { _manager.widthForWinningPercent = $0}))
-    case .gamesBehind:
-      return self.getBiggerWidth(.init(get: { _manager.widthForGamesBehind }, set: { _manager.widthForGamesBehind = $0}))
-    case .eliminationNumber:
-      return self.getBiggerWidth(.init(get: { _manager.widthFoEliminationNumber }, set: { _manager.widthFoEliminationNumber = $0}))
-    case .lastTen:
-      return self.getBiggerWidth(.init(get: { _manager.widthForLastTen }, set: { _manager.widthForLastTen = $0}))
-    case .streak:
-      return self.getBiggerWidth(.init(get: { _manager.widthForStreak }, set: { _manager.widthForStreak = $0}))
-    case .runDifferential:
-      return self.getBiggerWidth(.init(get: { _manager.widthForRunDifferential }, set: { _manager.widthForRunDifferential = $0}))
-    case .homeRecord:
-      return self.getBiggerWidth(.init(get: { _manager.widthForHomeRecord }, set: { _manager.widthForHomeRecord = $0}))
-    case .awayRecord:
-      return self.getBiggerWidth(.init(get: { _manager.widthForAwayRecord }, set: { _manager.widthForAwayRecord = $0}))
-    case .previousGame:
-      return self.getBiggerWidth(.init(get: { _manager.widthForPreviousGame }, set: { _manager.widthForPreviousGame = $0}))
-    case .nextGame:
-      return self.getBiggerWidth(.init(get: { _manager.widthFoNextGame }, set: { _manager.widthFoNextGame = $0}))
-    }
   }
 }
 
@@ -205,7 +212,7 @@ private struct WidthModifier: ViewModifier {
 }
 
 private extension View {
-  func getBiggerWidth(_ viewSize: Binding<CGFloat>) -> some View {
+  func applyWidthConstraint(_ viewSize: Binding<CGFloat>) -> some View {
     modifier(WidthModifier(width: viewSize))
   }
 }
@@ -222,12 +229,29 @@ class LayoutManager: ObservableObject {
   @Published var widthForHomeRecord: CGFloat = 0
   @Published var widthForAwayRecord: CGFloat = 0
   @Published var widthForPreviousGame: CGFloat = 0
-  @Published var widthFoNextGame: CGFloat = 0
-  @Published var widthFoEliminationNumber: CGFloat = 0
+  @Published var widthForNextGame: CGFloat = 0
+  @Published var widthForEliminationNumber: CGFloat = 0
   
+  func reset() {
+    self.widthForWins = 0
+    self.widthForLosses = 0
+    self.widthForWinningPercent = 0
+    self.widthForGamesBehind = 0
+    self.widthForLastTen = 0
+    self.widthForStreak = 0
+    self.widthForRunDifferential = 0
+    self.widthForHomeRecord = 0
+    self.widthForAwayRecord = 0
+    self.widthForPreviousGame = 0
+    self.widthForNextGame = 0
+    self.widthForEliminationNumber = 0
+  }
+  
+  /// SyncableScrollView doesn't seem to re-layout correctly when it's contents change size
+  /// Setting an expilicit `.id()` to it, attached to the columns widths makes sure that it will
+  /// be re-created when the ID changes, which seems to workaround for now.
   var someSortOfID: String {
-    let sum = widthForWins + widthForLosses + widthForWinningPercent + widthForGamesBehind + widthForLastTen + widthForStreak + widthForRunDifferential + widthForHomeRecord + widthForAwayRecord + widthForPreviousGame + widthFoNextGame + widthFoEliminationNumber
-    return "\(sum)"
+    "widthForWins:\(widthForWins)_widthForLosses:\(widthForLosses)_widthForWinningPercent:\(widthForWinningPercent) _widthForGamesBehind:\(widthForGamesBehind)_widthForLastTen:\(widthForLastTen)_widthForStreak:\(widthForStreak)_widthForRunDifferential:\(widthForRunDifferential)_widthForHomeRecord:\(widthForHomeRecord)_widthForAwayRecord:\(widthForAwayRecord)_widthForPreviousGame:\(widthForPreviousGame)_widthFoNextGame:\(widthForNextGame)_ widthFoEliminationNumber:\(widthForEliminationNumber)"
   }
 }
   
