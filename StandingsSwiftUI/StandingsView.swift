@@ -216,7 +216,6 @@ private struct WidthModifier: ViewModifier {
         }.onPreferenceChange(BiggerWidthKey.self) { value in
           if value > $width.wrappedValue {
             $width.wrappedValue = value
-            print("Chanding to \(value)")
           }
         }
       )

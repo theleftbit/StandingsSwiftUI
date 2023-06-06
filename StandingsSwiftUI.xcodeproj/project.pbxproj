@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F5B4157E2A28CFB400F9835F /* StandingsSwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B4157D2A28CFB400F9835F /* StandingsSwiftUIApp.swift */; };
-		F5B415802A28CFB400F9835F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B4157F2A28CFB400F9835F /* ContentView.swift */; };
+		F5B415802A28CFB400F9835F /* StandingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B4157F2A28CFB400F9835F /* StandingsView.swift */; };
 		F5B415822A28CFB400F9835F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F5B415812A28CFB400F9835F /* Assets.xcassets */; };
 		F5B415852A28CFB400F9835F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F5B415842A28CFB400F9835F /* Preview Assets.xcassets */; };
 		F5B4158C2A28D27400F9835F /* Sticky.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B4158B2A28D27300F9835F /* Sticky.swift */; };
@@ -19,7 +19,7 @@
 /* Begin PBXFileReference section */
 		F5B4157A2A28CFB400F9835F /* StandingsSwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StandingsSwiftUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F5B4157D2A28CFB400F9835F /* StandingsSwiftUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandingsSwiftUIApp.swift; sourceTree = "<group>"; };
-		F5B4157F2A28CFB400F9835F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		F5B4157F2A28CFB400F9835F /* StandingsView.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = StandingsView.swift; sourceTree = "<group>"; tabWidth = 2; };
 		F5B415812A28CFB400F9835F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F5B415842A28CFB400F9835F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		F5B4158B2A28D27300F9835F /* Sticky.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sticky.swift; sourceTree = "<group>"; };
@@ -58,7 +58,7 @@
 			isa = PBXGroup;
 			children = (
 				F5B4157D2A28CFB400F9835F /* StandingsSwiftUIApp.swift */,
-				F5B4157F2A28CFB400F9835F /* ContentView.swift */,
+				F5B4157F2A28CFB400F9835F /* StandingsView.swift */,
 				F5B4158F2A28DEC700F9835F /* SyncableScrollView.swift */,
 				F5B4158D2A28D36000F9835F /* Model.swift */,
 				F5B4158B2A28D27300F9835F /* Sticky.swift */,
@@ -146,7 +146,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F5B415802A28CFB400F9835F /* ContentView.swift in Sources */,
+				F5B415802A28CFB400F9835F /* StandingsView.swift in Sources */,
 				F5B4157E2A28CFB400F9835F /* StandingsSwiftUIApp.swift in Sources */,
 				F5B4158C2A28D27400F9835F /* Sticky.swift in Sources */,
 				F5B415902A28DEC700F9835F /* SyncableScrollView.swift in Sources */,

@@ -110,7 +110,26 @@ extension ViewModel {
       .init(name: "Cleveland Guardians", stats: generateRandomStats()),
       .init(name: "Chicago White Sox", stats: generateRandomStats()),
     ])
-    return .init(leagues: [.init(kind: .american, divisions: [alEast, alCentral])], hydratedStats: allStats)
+    let nlEast = Division(name: "NL East", teams: [
+      .init(name: "Braves", stats: generateRandomStats()),
+      .init(name: "Marlins", stats: generateRandomStats()),
+      .init(name: "Mets", stats: generateRandomStats()),
+      .init(name: "Phillies",  stats: generateRandomStats()),
+    ])
+    
+    let nlCentral = Division(name: "NL Central", teams: [
+      .init(name: "Pirates", stats: generateRandomStats()),
+      .init(name: "Brewers",  stats: generateRandomStats()),
+      .init(name: "Reds", stats: generateRandomStats()),
+      .init(name: "Cubs", stats: generateRandomStats()),
+    ])
+    return .init(
+      leagues: [
+        .init(kind: .american, divisions: [alEast, alCentral]),
+        .init(kind: .national, divisions: [nlEast, nlCentral]),
+      ],
+      hydratedStats: allStats
+    )
   }
   
   static func generateRandomStats() -> [Stat.Kind: Stat.Value] {
